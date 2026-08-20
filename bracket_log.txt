@@ -1,0 +1,9 @@
+[20260810_083517] Demo Match | players: Random Bot, Greedy Bot | winner: Greedy Bot | turns: 45
+[20260810_083517] 4-player Demo | players: Random Bot, Greedy Bot, Template Bot, Greedy Bot | winner: Template Bot | turns: 74
+[20260810_104123] Random Bot vs Greedy Bot | players: Random Bot, Greedy Bot | winner: Greedy Bot | turns: 29
+[20260810_104204] Greedy Bot vs Greedy Bot | players: Greedy Bot, Greedy Bot | winner: Greedy Bot | turns: 80
+[20260810_110302] David test | players: Greedy Bot, Random Bot | winner: Greedy Bot | turns: 59
+[20260810_122558] BIGASS test | players: Greedy Bot, Random Bot | winner: Greedy Bot | turns: 26
+[20260810_122638] BIGASS test 2 | players: Greedy Bot, Greedy Bot | winner: Greedy Bot | turns: 80
+[20260811_104823] Test Melissa Joao | players: Random Bot, Random Bot | winner: Random Bot | turns: 12
+[20260811_141137] Test Beatriz | players: Random Bot, Greedy Bot | winner: Greedy Bot | turns: 24

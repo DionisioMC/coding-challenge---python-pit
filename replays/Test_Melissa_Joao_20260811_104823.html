@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Test Melissa Joao</title>
+<style>
+  body { background:#111; color:#eee; font-family:system-ui,sans-serif; text-align:center; }
+  canvas { background:#1b1b1b; border:1px solid #333; margin-top:16px; image-rendering:pixelated; }
+  .controls { margin-top:12px; }
+  button { background:#333; color:#eee; border:1px solid #555; padding:6px 14px; margin:0 4px; border-radius:4px; cursor:pointer; }
+  button:hover { background:#444; }
+  #legend span { margin:0 10px; font-weight:600; }
+  #turnLabel { margin-top:8px; opacity:0.8; }
+</style>
+</head>
+<body>
+<h2>Test Melissa Joao</h2>
+<div id="legend"></div>
+<canvas id="board" width="440" height="440"></canvas>
+<div class="controls">
+  <button onclick="stepTo(0)">⏮ Start</button>
+  <button onclick="togglePlay()" id="playBtn">▶ Play</button>
+  <button onclick="step(-1)">◀ Step</button>
+  <button onclick="step(1)">Step ▶</button>
+  <button onclick="stepTo(replay.length-1)">End ⏭</button>
+</div>
+<div id="turnLabel"></div>
+
+<script>
+const replay = [{"turn": 0, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [2, 2], "trail": [[2, 2]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [17, 17], "trail": [[17, 17]], "color": "#e63946"}]}, {"turn": 1, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [3, 2], "trail": [[2, 2], [3, 2]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [16, 17], "trail": [[17, 17], [16, 17]], "color": "#e63946"}]}, {"turn": 2, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [3, 1], "trail": [[2, 2], [3, 2], [3, 1]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [16, 16], "trail": [[17, 17], [16, 17], [16, 16]], "color": "#e63946"}]}, {"turn": 3, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [4, 1], "trail": [[2, 2], [3, 2], [3, 1], [4, 1]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [15, 16], "trail": [[17, 17], [16, 17], [16, 16], [15, 16]], "color": "#e63946"}]}, {"turn": 4, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [4, 0], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [15, 17], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17]], "color": "#e63946"}]}, {"turn": 5, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [3, 0], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0], [3, 0]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [15, 18], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17], [15, 18]], "color": "#e63946"}]}, {"turn": 6, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [2, 0], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0], [3, 0], [2, 0]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [16, 18], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17], [15, 18], [16, 18]], "color": "#e63946"}]}, {"turn": 7, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [1, 0], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0], [3, 0], [2, 0], [1, 0]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [16, 19], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17], [15, 18], [16, 18], [16, 19]], "color": "#e63946"}]}, {"turn": 8, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [0, 0], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [15, 19], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17], [15, 18], [16, 18], [16, 19], [15, 19]], "color": "#e63946"}]}, {"turn": 9, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [0, 1], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0], [0, 1]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [14, 19], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17], [15, 18], [16, 18], [16, 19], [15, 19], [14, 19]], "color": "#e63946"}]}, {"turn": 10, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [1, 1], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0], [0, 1], [1, 1]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [14, 18], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17], [15, 18], [16, 18], [16, 19], [15, 19], [14, 19], [14, 18]], "color": "#e63946"}]}, {"turn": 11, "players": [{"id": 0, "name": "Random Bot", "alive": true, "pos": [2, 1], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0], [0, 1], [1, 1], [2, 1]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [14, 17], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17], [15, 18], [16, 18], [16, 19], [15, 19], [14, 19], [14, 18], [14, 17]], "color": "#e63946"}]}, {"turn": 12, "players": [{"id": 0, "name": "Random Bot", "alive": false, "pos": [2, 1], "trail": [[2, 2], [3, 2], [3, 1], [4, 1], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0], [0, 1], [1, 1], [2, 1]], "color": "#e63946"}, {"id": 1, "name": "Random Bot", "alive": true, "pos": [13, 17], "trail": [[17, 17], [16, 17], [16, 16], [15, 16], [15, 17], [15, 18], [16, 18], [16, 19], [15, 19], [14, 19], [14, 18], [14, 17], [13, 17]], "color": "#e63946"}]}];
+const width = 20;
+const height = 20;
+const cell = 22;
+
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+let idx = 0;
+let playing = false;
+let timer = null;
+
+// Colors are chosen by each bot (BOT_COLOR) and travel with the replay data.
+const firstSnap = replay[0];
+document.getElementById('legend').innerHTML = firstSnap.players.map(
+  p => `<span style="color:${p.color}">&#9632; ${p.name}</span>`
+).join('');
+
+function draw() {
+  const snap = replay[idx];
+  ctx.fillStyle = '#1b1b1b';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // grid lines
+  ctx.strokeStyle = '#262626';
+  for (let x = 0; x <= width; x++) {
+    ctx.beginPath(); ctx.moveTo(x*cell, 0); ctx.lineTo(x*cell, height*cell); ctx.stroke();
+  }
+  for (let y = 0; y <= height; y++) {
+    ctx.beginPath(); ctx.moveTo(0, y*cell); ctx.lineTo(width*cell, y*cell); ctx.stroke();
+  }
+
+  snap.players.forEach((p) => {
+    const color = p.color;
+    ctx.fillStyle = color + (p.alive ? 'aa' : '33');
+    p.trail.forEach(([x, y]) => {
+      ctx.fillRect(x*cell+1, y*cell+1, cell-2, cell-2);
+    });
+    if (p.alive) {
+      const [hx, hy] = p.pos;
+      ctx.fillStyle = color;
+      ctx.fillRect(hx*cell, hy*cell, cell, cell);
+    }
+  });
+
+  document.getElementById('turnLabel').textContent =
+    `Turn ${snap.turn} / ${replay[replay.length-1].turn}` +
+    (idx === replay.length-1 ? '  —  ' + snap.players.filter(p=>p.alive).map(p=>p.name).join(', ') +
+      (snap.players.some(p=>p.alive) ? ' survives!' : ' — draw') : '');
+}
+
+function step(delta) {
+  idx = Math.max(0, Math.min(replay.length - 1, idx + delta));
+  draw();
+}
+function stepTo(i) { idx = i; draw(); }
+function togglePlay() {
+  playing = !playing;
+  document.getElementById('playBtn').textContent = playing ? '⏸ Pause' : '▶ Play';
+  if (playing) {
+    timer = setInterval(() => {
+      if (idx >= replay.length - 1) { togglePlay(); return; }
+      step(1);
+    }, 90);
+  } else {
+    clearInterval(timer);
+  }
+}
+
+draw();
+</script>
+</body>
+</html>
