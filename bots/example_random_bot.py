@@ -1,4 +1,3 @@
-"""Weakest possible baseline: moves in a uniformly random legal direction."""
 import random
 
 BOT_NAME = "Random Bot"

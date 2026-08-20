@@ -1,8 +1,3 @@
-"""
-A step up from random: avoids moves that lead into an immediate dead end
-by checking how many escape routes each candidate move leaves.
-"""
-
 BOT_NAME = "Greedy Bot"
 BOT_COLOR = "#457b9d"
 
@@ -35,7 +30,6 @@ def get_move(state):
         nx, ny = x + dx, y + dy
         if not (0 <= nx < width and 0 <= ny < height) or (nx, ny) in walls:
             continue
-        # Prefer moves that leave us the most open space next turn.
         score = count_open_neighbors((nx, ny), walls | {(nx, ny)}, width, height)
         if score > best_score:
             best_move, best_score = direction, score
