@@ -19,7 +19,7 @@ be the last one standing.
 
 ## Writing your bot
 
-1. Copy `bots/template_bot.py` to `bots/your_campus/bot_yourlogin.py`.
+1. Copy `Campus_bots/template_bot.py` to `Campus_bots/your_campus/bot_yourlogin.py`.
 2. Set `BOT_NAME` to whatever you want displayed in replays (be respectful).
 3. Set `BOT_COLOR` to the color your snake will be drawn, in hex format (e.g.`"#ff00ff"`)
 4. Implement `get_move(state)`, it must return one of either: `"UP"`, `"DOWN"`, `"LEFT"`, `"RIGHT"`.
@@ -49,19 +49,19 @@ position.
 
 ## Testing your Bot
 
-Matches are run by compiling match.py with two bots from the bots/your_campus/ directory.
+Matches are run by compiling match.py with two bots from the Campus_bots/ directory.
 The bots position is based on the command line compilation, first one starts top left and second one starts bottom right.
 A --label flag can be added for keeping track of matches.
 A --width and --height flag can be used to change the arena.
 
 ```bash
-python3 match.py bots/bot_rogde-so.py bots/bot_r-garcia.py --label "Example Match"
+python3 match.py Campus_bots/bot_rogde-so.py Campus_bots/bot_r-garcia.py --label "Example Match"
 ```
 
 Supports maximum 4 bots per match (just for fun):
 
 ```bash
-python3 match.py bots/bot_a.py bots/bot_b.py bots/bot_c.py bots/bot_d.py --width 50 --height 50 --label "Free-for-all"
+python3 match.py Campus_bots/bot_a.py Campus_bots/bot_b.py Campus_bots/bot_c.py Campus_bots/bot_d.py --width 50 --height 50 --label "Free-for-all"
 ```
 
 Each run prints the result, appends one line to `bracket_log.txt`, and writes an HTML replay to `replays/`. 
@@ -69,20 +69,21 @@ Just double-click any `.html` file to watch the match play out in your browser.
 
 ## Included example bots (for reference / warm-up)
 
-- `bots/example_random_bot.py`: moves randomly among safe directions.
+- `Campus_bots/example_random_bot.py`: moves randomly among safe directions.
   This is the weakest possible bot, beating it is the bare minimum.
-- `bots/example_greedy_bot.py`: picks whichever safe move leaves it
+- `Campus_bots/example_greedy_bot.py`: picks whichever safe move leaves it
   the most open neighboring space. A reasonable mid-tier opponent.
 
 ## Submitting your Bot
 
 Before submitting make sure of the following:
 - The file name must include the intra username of all developers.
-- The file is saved inside the correct campus folder.
+- The file is saved inside the correct Campus_bots folder.
 - The bot has been tested and functions properly.
 - The bot doesn't need any other dependencies.
 
 To submit:
+- Make sure not to edit any other file except your own bot.
 - Fork the repository - Open the repository page and click "Fork", then "Create fork".
 - Clone your fork.
 - Work on a branch - Commit whenever you reach something that works.
