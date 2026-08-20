@@ -7,7 +7,6 @@ _HEX_COLOR_RE = re.compile(r"^#(?:[0-9a-fA-F]{3}){1,2}$")
 
 
 def resolve_color(requested_color, fallback_index):
-    """Validate a bot-supplied hex color, falling back to the default palette."""
     if isinstance(requested_color, str) and _HEX_COLOR_RE.match(requested_color):
         return requested_color
     return FALLBACK_PALETTE[fallback_index % len(FALLBACK_PALETTE)]
@@ -20,7 +19,7 @@ DIRECTIONS = {
 }
 OPPOSITE = {"UP": "DOWN", "DOWN": "UP", "LEFT": "RIGHT", "RIGHT": "LEFT"}
 
-MOVE_TIMEOUT_SECONDS = 0.2  # per-bot, per-turn time budget
+MOVE_TIMEOUT_SECONDS = 0.2 
 
 
 class Player:
@@ -32,20 +31,19 @@ class Player:
         self.direction = start_dir
         self.color = color
         self.alive = True
-        self.trail = [start_pos]  # includes current head as trail[-1]
+        self.trail = [start_pos] 
         self.death_reason = None
         self.death_turn = None
 
 
 def call_with_timeout(fn, arg, timeout=MOVE_TIMEOUT_SECONDS, default=None):
-    """Call fn(arg) with a hard wall-clock timeout. Returns (result, error_str_or_None)."""
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
         future = ex.submit(fn, arg)
         try:
             return future.result(timeout=timeout), None
         except concurrent.futures.TimeoutError:
             return default, "timeout"
-        except Exception as e:  # noqa: BLE001 - bot code is untrusted
+        except Exception as e:
             return default, f"{type(e).__name__}: {e}"
 
 
@@ -56,10 +54,10 @@ class TronGame:
         self.max_turns = max_turns
         self.turn = 0
         self.players = []
-        self.walls = set()  # all occupied cells (any trail, any player)
+        self.walls = set() 
         self.rng = random.Random(seed)
-        self.replay = []  # list of per-turn snapshots for the viewer
-        self.errors = []  # log of bot errors/timeouts, for debugging
+        self.replay = [] 
+        self.errors = [] 
 
     def add_player(self, pid, name, get_move_fn, start_pos, start_dir, color=None):
         color = resolve_color(color, pid)
@@ -68,7 +66,6 @@ class TronGame:
         self.walls.add(start_pos)
 
     def build_state_for(self, player):
-        """Public state visible to a given player's bot."""
         return {
             "width": self.width,
             "height": self.height,
@@ -86,7 +83,7 @@ class TronGame:
                 }
                 for p in self.players
             },
-            "walls": self.walls,  # set of (x, y) occupied cells
+            "walls": self.walls,  
         }
 
     def in_bounds(self, pos):
@@ -94,12 +91,10 @@ class TronGame:
         return 0 <= x < self.width and 0 <= y < self.height
 
     def step(self):
-        """Advance the game by one turn. Returns True if the game should continue."""
         alive_players = [p for p in self.players if p.alive]
         if len(alive_players) <= 1 or self.turn >= self.max_turns:
             return False
 
-        # 1. Ask every alive bot for a move (each gets a time budget).
         chosen = {}
         for p in alive_players:
             state = self.build_state_for(p)
@@ -210,7 +205,6 @@ DEFAULT_START_DIRS = ["RIGHT", "LEFT", "DOWN", "UP"]
 
 
 def default_start_positions(width, height, n):
-    """Spread up to 4 players across the corners of the grid."""
     margin = 2
     corners = [
         (margin, margin),

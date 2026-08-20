@@ -1,28 +1,3 @@
-"""
-Run one match between chosen bots
-
-Usage:
-    python3 match.py bots/bot_alice.py bots/bot_bob.py
-    python3 match.py bots/bot_alice.py bots/bot_bob.py bots/bot_carla.py bots/bot_dave.py
-    python3 match.py bots/bot_alice.py bots/bot_bob.py --width 25 --height 25 --max-turns 800
-
-Supports 2-4 bots per match. Prints the result, appends a line to
-bracket_log.txt (a running record of every match you've run), and writes
-an HTML replay to replays/.
-
-Ties
-----
-A tie happens when the match ends with more than one bot in first place -
-either from a simultaneous death (e.g. a head-on collision) or from
-reaching the turn limit with two equally-long survivors. Since a bracket
-needs exactly one winner per match, ties are auto-resolved by default:
-the tied bots replay a shorter "sudden death" round on a smaller board.
-If that's still tied (rare - only really happens with mirror-symmetric
-matchups), it repeats a few more times before falling back to a seeded
-coin flip, which is always printed and logged explicitly so it's never
-a silent decision. Pass --no-tiebreak to skip all of this and just get
-the tie reported as-is.
-"""
 import argparse
 import datetime
 import os
@@ -42,16 +17,6 @@ SUDDEN_DEATH_MIN_TURNS = 100
 
 
 def run_with_tiebreak(bots, width, height, max_turns, seed, max_rounds=SUDDEN_DEATH_MAX_ROUNDS):
-    """
-    bots: list of (name, fn, color) tuples.
-    Plays the match; if it's a tie, replays sudden-death rounds among just
-    the tied bots (shrinking board, shorter clock, rotated start corners)
-    until a single winner emerges or max_rounds is exhausted, at which
-    point the tie is broken with a seeded coin flip.
-
-    Returns (result, game, notes) - notes describes anything beyond a
-    single clean match, for logging/printing.
-    """
     notes = []
     result, game = play_match(bots, width=width, height=height, max_turns=max_turns, seed=seed)
     round_bots = bots
@@ -62,8 +27,8 @@ def run_with_tiebreak(bots, width, height, max_turns, seed, max_rounds=SUDDEN_DE
         tied_names = set(result["winners"])
         round_bots = [b for b in round_bots if b[0] in tied_names]
         if len(round_bots) < 2:
-            break  # safety net, shouldn't happen
-        round_bots = round_bots[1:] + round_bots[:1]  # rotate start corners
+            break 
+        round_bots = round_bots[1:] + round_bots[:1] 
         width = max(SUDDEN_DEATH_MIN_DIM, width - SUDDEN_DEATH_SHRINK)
         height = max(SUDDEN_DEATH_MIN_DIM, height - SUDDEN_DEATH_SHRINK)
         max_turns = max(SUDDEN_DEATH_MIN_TURNS, max_turns // 2)

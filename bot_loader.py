@@ -1,4 +1,3 @@
-"""Shared helper to import a bot .py file and pull out its BOT_NAME, BOT_COLOR, get_move."""
 import importlib.util
 import os
 
@@ -8,11 +7,6 @@ class BotLoadError(Exception):
 
 
 def load_bot(path):
-    """
-    Load a single bot module from a file path.
-    Returns (name, get_move_fn, color_or_None).
-    Raises BotLoadError if the file can't be imported or is missing get_move().
-    """
     if not os.path.isfile(path):
         raise BotLoadError(f"no such file: {path}")
 
@@ -21,7 +15,7 @@ def load_bot(path):
     module = importlib.util.module_from_spec(spec)
     try:
         spec.loader.exec_module(module)
-    except Exception as e:  # noqa: BLE001 - bot code is untrusted
+    except Exception as e:
         raise BotLoadError(f"{path} failed to import: {e}") from e
 
     if not hasattr(module, "get_move"):
